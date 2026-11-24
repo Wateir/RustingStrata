@@ -1704,6 +1704,16 @@ fn run(cmd: Cmd) -> anyhow::Result<()> {
                             oc.fetch_sub(1, Relaxed);
                             return;
                         }
+                        // The KaTeX files of the page (math in replies), under /katex/ with the same checks as the page.
+                        // The files never change with the server running, so the browser may keep them.
+                        Ok(r) if r.method == "GET" && (k.read().unwrap().any() || serve::host_ok(&r.host, &a, &allowed))
+                            && let Some(file) = r.path.strip_prefix("/katex/")
+                            && let Some((_, ty, b)) = serve::KATEX.iter().find(|&(n, _, _)| n == file) => {
+                            let _ = write!(&c, "HTTP/1.1 200 OK\r\nContent-Type: {ty}\r\nCache-Control: max-age=31536000, immutable\r\nContent-Length: {}\r\nConnection: close\r\n\r\n", b.len());
+                            let _ = c.write_all(b);
+                            oc.fetch_sub(1, Relaxed);
+                            return;
+                        }
                         Ok(_) if who.is_none() =>
                             return reply(json!({"error": {"message": "missing or wrong API key", "type": "invalid_api_key"}}), "401 Unauthorized"),
                         // Clients list the models often; a model still loading is listed, as its chats wait for the load.

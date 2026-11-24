@@ -132,6 +132,33 @@ pub fn held(c: &mut impl std::io::Write, last: &mut std::time::Instant) -> bool 
 /// The chat page of `serve`.
 pub const PAGE: &str = include_str!("web/index.html");
 
+/// The KaTeX files the chat page needs to show math in replies, by the path they are served at. Embedded like the
+/// page itself, so the server stays one file that works without the network.
+pub const KATEX: &[(&str, &str, &[u8])] = &[
+    ("katex.min.js", "application/javascript; charset=utf-8", include_bytes!("web/katex/katex.min.js")),
+    ("katex.min.css", "text/css; charset=utf-8", include_bytes!("web/katex/katex.min.css")),
+    ("fonts/KaTeX_AMS-Regular.woff2", "font/woff2", include_bytes!("web/katex/fonts/KaTeX_AMS-Regular.woff2")),
+    ("fonts/KaTeX_Caligraphic-Bold.woff2", "font/woff2", include_bytes!("web/katex/fonts/KaTeX_Caligraphic-Bold.woff2")),
+    ("fonts/KaTeX_Caligraphic-Regular.woff2", "font/woff2", include_bytes!("web/katex/fonts/KaTeX_Caligraphic-Regular.woff2")),
+    ("fonts/KaTeX_Fraktur-Bold.woff2", "font/woff2", include_bytes!("web/katex/fonts/KaTeX_Fraktur-Bold.woff2")),
+    ("fonts/KaTeX_Fraktur-Regular.woff2", "font/woff2", include_bytes!("web/katex/fonts/KaTeX_Fraktur-Regular.woff2")),
+    ("fonts/KaTeX_Main-Bold.woff2", "font/woff2", include_bytes!("web/katex/fonts/KaTeX_Main-Bold.woff2")),
+    ("fonts/KaTeX_Main-BoldItalic.woff2", "font/woff2", include_bytes!("web/katex/fonts/KaTeX_Main-BoldItalic.woff2")),
+    ("fonts/KaTeX_Main-Italic.woff2", "font/woff2", include_bytes!("web/katex/fonts/KaTeX_Main-Italic.woff2")),
+    ("fonts/KaTeX_Main-Regular.woff2", "font/woff2", include_bytes!("web/katex/fonts/KaTeX_Main-Regular.woff2")),
+    ("fonts/KaTeX_Math-BoldItalic.woff2", "font/woff2", include_bytes!("web/katex/fonts/KaTeX_Math-BoldItalic.woff2")),
+    ("fonts/KaTeX_Math-Italic.woff2", "font/woff2", include_bytes!("web/katex/fonts/KaTeX_Math-Italic.woff2")),
+    ("fonts/KaTeX_SansSerif-Bold.woff2", "font/woff2", include_bytes!("web/katex/fonts/KaTeX_SansSerif-Bold.woff2")),
+    ("fonts/KaTeX_SansSerif-Italic.woff2", "font/woff2", include_bytes!("web/katex/fonts/KaTeX_SansSerif-Italic.woff2")),
+    ("fonts/KaTeX_SansSerif-Regular.woff2", "font/woff2", include_bytes!("web/katex/fonts/KaTeX_SansSerif-Regular.woff2")),
+    ("fonts/KaTeX_Script-Regular.woff2", "font/woff2", include_bytes!("web/katex/fonts/KaTeX_Script-Regular.woff2")),
+    ("fonts/KaTeX_Size1-Regular.woff2", "font/woff2", include_bytes!("web/katex/fonts/KaTeX_Size1-Regular.woff2")),
+    ("fonts/KaTeX_Size2-Regular.woff2", "font/woff2", include_bytes!("web/katex/fonts/KaTeX_Size2-Regular.woff2")),
+    ("fonts/KaTeX_Size3-Regular.woff2", "font/woff2", include_bytes!("web/katex/fonts/KaTeX_Size3-Regular.woff2")),
+    ("fonts/KaTeX_Size4-Regular.woff2", "font/woff2", include_bytes!("web/katex/fonts/KaTeX_Size4-Regular.woff2")),
+    ("fonts/KaTeX_Typewriter-Regular.woff2", "font/woff2", include_bytes!("web/katex/fonts/KaTeX_Typewriter-Regular.woff2")),
+];
+
 /// What a chat of a model outside the main engine did, for the server's log and statistics.
 pub struct Done { pub prompt: usize, pub cached: usize, pub completion: usize, pub prefill_s: f64, pub finish: &'static str }
 
